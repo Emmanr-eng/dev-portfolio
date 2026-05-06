@@ -159,6 +159,7 @@ export default function App() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.3 }}
             className="md:col-span-1 md:row-span-1"
+            style={{ height: '280px', maxHeight: '280px' }}
           >
             <TerminalTile />
           </motion.div>
