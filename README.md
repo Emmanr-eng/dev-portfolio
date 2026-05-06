@@ -1,6 +1,6 @@
 # 🗺️ Developer Atlas
 
-> An interactive map of a developer's journey featuring a Component Lab, interactive Bento grid, and AI-powered resume agent.
+> An interactive map of a developer's journey featuring an enhanced Component Lab, searchable Bug Timeline, and AI-powered resume agent with conversation memory.
 
 ![TypeScript](https://img.shields.io/badge/TypeScript-93.7%25-blue)
 ![React](https://img.shields.io/badge/React-19-61DAFB)
@@ -9,13 +9,38 @@
 
 ## ✨ Features
 
-- **🎨 Neo-Brutalist Design** — Bold, modern aesthetic with cyber-lime accents and glass-panel effects
-- **📦 Interactive Bento Grid** — Dynamic layout showcasing skills, projects, and live experiments
-- **🧪 Component Lab** — Showcase of reusable UI components with live previews
-- **🐛 Bug Timeline** — Visual archive documenting code optimizations and debugging journeys
-- **🤖 AI Chat Agent** — Gemini-powered conversational interface for portfolio queries
-- **🎬 Smooth Animations** — Framer Motion (motion/react) powered scroll and interaction animations
-- **📱 Fully Responsive** — Optimized for all screen sizes
+### 🎨 Neo-Brutalist Design
+Bold, modern aesthetic with cyber-lime accents and glass-panel effects.
+
+### 📦 Interactive Bento Grid
+Dynamic layout showcasing skills, projects, and live experiments.
+
+### 🧪 Component Lab (Enhanced)
+- **Category Filtering** — Filter components by type: Navigation, Buttons, Cards, Effects
+- **5 Interactive Components** — Glass Nav, Haptic Glow, Skeleton Loader, Flip Card, Morph Button
+- **Copy to Clipboard** — One-click code copying with visual feedback
+- **Live UI Previews** — See components in action with real-time interactions
+
+### 🐛 Bug Timeline (Enhanced)
+- **Search Functionality** — Find bugs by title or description
+- **Tag Filtering** — Filter by React, CSS, Performance, Hooks, and more
+- **Severity Indicators** — Visual badges for Critical, Medium, and Low severity
+- **Expandable Cards** — Click to reveal before/after code comparisons
+- **Key Learnings** — Each bug includes actionable takeaways
+- **Scroll Animations** — Staggered reveal animations on scroll
+
+### 🤖 AI Chat Agent (Enhanced)
+- **Conversation Memory** — Context-aware responses using chat history
+- **localStorage Persistence** — Chat history saved across sessions
+- **Suggested Prompts** — Quick-start conversation chips
+- **Retry Mechanism** — Easy retry on failed API calls
+- **Clear History** — One-click chat reset
+
+### 🎬 Smooth Animations
+Framer Motion (motion/react) powered scroll and interaction animations.
+
+### 📱 Fully Responsive
+Optimized for all screen sizes from mobile to desktop.
 
 ## 🛠️ Tech Stack
 
@@ -73,16 +98,16 @@
 dev-portfolio/
 ├── src/
 │   ├── components/
-│   │   ├── ai/              # AI-related components
-│   │   ├── BugTimeline.tsx  # Bug fix timeline component
-│   │   ├── ChatAgent.tsx    # AI chat interface
-│   │   ├── ComponentLab.tsx # Interactive component showcase
-│   │   └── InteractiveTiles.tsx # Bento grid tiles
-│   ├── hooks/               # Custom React hooks
-│   ├── App.tsx              # Main application component
-│   ├── main.tsx             # Application entry point
-│   └── index.css            # Global styles
-├── tests/                   # Playwright tests
+│   │   ├── ai/                   # AI-related components
+│   │   ├── BugTimeline.tsx       # Searchable bug archive with filters
+│   │   ├── ChatAgent.tsx         # AI chat with memory & persistence
+│   │   ├── ComponentLab.tsx      # Categorized component showcase
+│   │   └── InteractiveTiles.tsx  # Bento grid tiles
+│   ├── hooks/                    # Custom React hooks
+│   ├── App.tsx                   # Main application component
+│   ├── main.tsx                  # Application entry point
+│   └── index.css                 # Global styles
+├── tests/                        # Playwright tests
 ├── index.html
 ├── vite.config.ts
 ├── tsconfig.json
@@ -95,16 +120,25 @@ dev-portfolio/
 The main hero section featuring a Bento grid layout with:
 - Hero tile with brand identity
 - Component Lab preview
-- Status indicator
-- Interactive terminal
+- Status indicator with live clock
+- Interactive terminal with commands
 - Live experiment counter
 - AI Agent access point
 
 ### Archive (Bug Timeline)
-A visual timeline documenting the evolution of code optimizations and bug fixes.
+A searchable, filterable timeline documenting code optimizations and bug fixes with:
+- Search by title/description
+- Filter by technology tags
+- Severity badges (Critical/Medium/Low)
+- Expandable before/after code comparisons
+- Key learning summaries
 
 ### Component Lab
-An interactive showcase of custom UI components with live demonstrations.
+An interactive showcase of 5 custom UI components organized by category:
+- **Navigation**: Glass Nav
+- **Buttons**: Haptic Glow, Morph Button
+- **Cards**: Flip Card
+- **Effects**: Skeleton Loader
 
 ### Connect
 Contact section with social links and call-to-action for collaborations.
@@ -113,7 +147,7 @@ Contact section with social links and call-to-action for collaborations.
 
 ### Environment Variables
 
-For the AI Chat Agent functionality, you may need to configure:
+For the AI Chat Agent functionality, configure:
 
 ```env
 GEMINI_API_KEY=your_api_key_here
@@ -142,6 +176,12 @@ Run end-to-end tests with Playwright:
 ```bash
 npx playwright test
 ```
+
+## 🆕 Recent Updates (v2.7.0)
+
+- ✅ **Component Lab**: Added category filtering, 3 new components, copy-to-clipboard
+- ✅ **Bug Timeline**: Added search, tag filtering, severity badges, expandable cards
+- ✅ **AI Chat Agent**: Added conversation context, localStorage persistence, suggested prompts, retry mechanism
 
 ## 📝 License
 
