@@ -1,6 +1,8 @@
-import { useState, useEffect, type SubmitEvent } from 'react';
+import { useState, useEffect, useRef, type SubmitEvent } from 'react';
 import { Terminal, Clock, Cloud } from 'lucide-react';
 import { motion } from 'motion/react';
+
+const MAX_HISTORY = 50; // Limit history to prevent infinite growth
 
 export default function TerminalTile() {
   const [input, setInput] = useState('');
@@ -8,6 +10,14 @@ export default function TerminalTile() {
     'Welcome to Developer Atlas v2.6.0',
     'Type "help" for a list of commands.',
   ]);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to bottom when history changes
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [history]);
 
   const handleCommand = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -34,7 +44,11 @@ export default function TerminalTile() {
       response = `Command not found: ${cmd}. Type "help" for options.`;
     }
 
-    setHistory((prev) => [...prev, `> ${input}`, response]);
+    // Limit history length to prevent stretching
+    setHistory((prev) => {
+      const newHistory = [...prev, `> ${input}`, response];
+      return newHistory.slice(-MAX_HISTORY);
+    });
     setInput('');
   };
 
@@ -43,9 +57,9 @@ export default function TerminalTile() {
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25 }}
-      className="flex flex-col h-full bg-black rounded-3xl border border-white/10 p-5 font-mono text-xs group overflow-hidden"
+      className="flex flex-col bg-black rounded-3xl border border-white/10 p-5 font-mono text-xs group overflow-hidden h-full min-h-0"
     >
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center justify-between mb-3 shrink-0">
         <div className="flex items-center gap-1.5 text-cyber-lime/90">
           <Terminal size={12} />
           <span className="text-[10px] uppercase tracking-widest">Terminal</span>
@@ -59,13 +73,18 @@ export default function TerminalTile() {
         </motion.div>
       </div>
 
-      <div className="flex gap-1.5 mb-3">
+      <div className="flex gap-1.5 mb-3 shrink-0">
         <div className="w-2 h-2 rounded-full bg-red-500" />
         <div className="w-2 h-2 rounded-full bg-yellow-500" />
         <div className="w-2 h-2 rounded-full bg-green-500" />
       </div>
       
-      <div className="flex-1 overflow-y-auto mb-2 space-y-1 custom-scrollbar text-gray-500">
+      {/* Fixed height scrollable area */}
+      <div 
+        ref={scrollRef}
+        className="flex-1 overflow-y-auto mb-2 space-y-1 text-gray-500 min-h-0 max-h-32"
+        style={{ scrollbarWidth: 'thin', scrollbarColor: '#4ade80 transparent' }}
+      >
         {history.map((line, i) => (
           <div key={i} className={line.startsWith('>') ? 'text-green-400' : ''}>
             {line}
@@ -80,7 +99,7 @@ export default function TerminalTile() {
         </motion.div>
       </div>
 
-      <form onSubmit={handleCommand} className="flex gap-2 border-t border-white/5 pt-2">
+      <form onSubmit={handleCommand} className="flex gap-2 border-t border-white/5 pt-2 shrink-0">
         <span className="text-green-400">$</span>
         <input
           autoFocus
