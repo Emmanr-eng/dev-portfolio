@@ -3,12 +3,38 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Google AI Studio App</title>
-    <script type="module" crossorigin src="/dev-portfolio/assets/index-BwpleW_w.js"></script>
-    <link rel="stylesheet" crossorigin href="/dev-portfolio/assets/index-BbCymgX8.css">
+    <title>Developer Atlas</title>
+    <!--
+      Restore URL encoded by 404.html redirect (spa-github-pages pattern).
+      Must run before the React bundle so the router sees the correct path.
+    -->
+    <script>
+      (function () {
+        var redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+        if (redirect && redirect !== location.href) {
+          history.replaceState(null, null, redirect);
+        }
+
+        // Decode the ?p= query param written by 404.html
+        var search = location.search;
+        if (search.slice(1, 3) === 'p=') {
+          var decoded =
+            location.pathname.slice(0, -1) +
+            (search[1] === 'p' ? '/' : '') +
+            search
+              .slice(1)
+              .replace(/^p=/, '')
+              .replace(/~and~/g, '&') +
+            location.hash;
+          history.replaceState(null, null, decoded);
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="/dev-portfolio/assets/index-BroGHkTK.js"></script>
+    <link rel="stylesheet" crossorigin href="/dev-portfolio/assets/index-XuycjsyD.css">
   </head>
   <body>
     <div id="root"></div>
   </body>
 </html>
-
