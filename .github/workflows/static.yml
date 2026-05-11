@@ -1,12 +1,19 @@
 name: Deploy to GitHub Pages
 
 on:
-  workflow_dispatch:  # Only run when manually triggered, not on push
+  push:
+    branches:
+      - main
+  workflow_dispatch:  # Also allow manual triggers
 
 permissions:
   contents: read
   pages: write
   id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
 
 jobs:
   build_site:
@@ -26,11 +33,12 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
       - name: Upload Artifacts
         uses: actions/upload-pages-artifact@v3
         with:
-          # This points to the folder Vite creates
           path: './dist'
 
   deploy:
