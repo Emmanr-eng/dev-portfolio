@@ -1,18 +1,17 @@
 import { useState, useEffect, useRef, type SubmitEvent } from 'react';
-import { Terminal, Clock, Cloud } from 'lucide-react';
+import { Terminal, Clock, Wifi } from 'lucide-react';
 import { motion } from 'motion/react';
 
-const MAX_HISTORY = 20; // Limit history to prevent overflow
+const MAX_HISTORY = 20;
 
 export default function TerminalTile() {
   const [input, setInput] = useState('');
   const [history, setHistory] = useState<string[]>([
-    'Welcome to Developer Atlas v2.6.0',
-    'Type "help" for a list of commands.',
+    'Developer Atlas v2.6.0',
+    'Type "help" for commands.',
   ]);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll to bottom when history changes
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -25,7 +24,7 @@ export default function TerminalTile() {
     let response: string;
 
     if (cmd === 'help') {
-      response = 'Available commands: about, skills, contact, clear, whoami';
+      response = 'Commands: about, skills, contact, clear, whoami';
     } else if (cmd === 'about') {
       response = 'The Open-Source Human: Authentic, transparent, and always learning.';
     } else if (cmd === 'whoami' || cmd.startsWith('whoami ')) {
@@ -41,13 +40,12 @@ export default function TerminalTile() {
     } else if (cmd === '') {
       return;
     } else {
-      response = `Command not found: ${cmd}. Type "help" for options.`;
+      response = `bash: ${cmd}: command not found`;
     }
 
-    // Limit history to prevent stretching
     setHistory((prev) => {
-      const newHistory = [...prev, `> ${input}`, response];
-      return newHistory.slice(-MAX_HISTORY);
+      const next = [...prev, `$ ${input}`, response];
+      return next.slice(-MAX_HISTORY);
     });
     setInput('');
   };
@@ -55,69 +53,55 @@ export default function TerminalTile() {
   return (
     <div className="h-full w-full" style={{ height: '100%', maxHeight: '280px', minHeight: '200px' }}>
       <motion.div
-        initial={{ opacity: 0, y: 8 }}
+        initial={{ opacity: 0, y: 6 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.25 }}
-        className="flex flex-col bg-black rounded-3xl border border-white/10 p-5 font-mono text-xs group h-full"
+        transition={{ duration: 0.2 }}
+        className="flex flex-col bg-ink h-full font-mono text-xs"
         style={{ maxHeight: '280px', overflow: 'hidden' }}
       >
-        {/* Header - fixed */}
-        <div className="flex items-center justify-between mb-3 shrink-0">
-          <div className="flex items-center gap-1.5 text-cyber-lime/90">
-            <Terminal size={12} />
+        {/* Title bar */}
+        <div className="flex items-center justify-between px-4 py-2.5 border-b border-canvas/10 shrink-0">
+          <div className="flex items-center gap-1.5 text-canvas/50">
+            <Terminal size={11} />
             <span className="text-[10px] uppercase tracking-widest">Terminal</span>
           </div>
-          <motion.div
-            animate={{ opacity: [0.4, 1, 0.4] }}
-            transition={{ repeat: Infinity, duration: 1.8 }}
-            className="text-[10px] text-green-400/80"
-          >
-            LIVE
-          </motion.div>
+          <div className="flex gap-1.5">
+            <div className="w-2 h-2 rounded-full bg-canvas/10" />
+            <div className="w-2 h-2 rounded-full bg-canvas/10" />
+            <div className="w-2 h-2 rounded-full bg-canvas/20" />
+          </div>
         </div>
 
-        {/* Traffic lights - fixed */}
-        <div className="flex gap-1.5 mb-3 shrink-0">
-          <div className="w-2 h-2 rounded-full bg-red-500" />
-          <div className="w-2 h-2 rounded-full bg-yellow-500" />
-          <div className="w-2 h-2 rounded-full bg-green-500" />
-        </div>
-        
-        {/* Scrollable history area - THIS IS THE KEY FIX */}
-        <div 
+        {/* History */}
+        <div
           ref={scrollRef}
-          className="flex-1 overflow-y-auto mb-2 space-y-1 text-gray-500"
-          style={{ 
-            maxHeight: '120px', 
-            minHeight: '60px',
-            overflowY: 'auto',
-            scrollbarWidth: 'thin',
-            scrollbarColor: '#4ade80 transparent'
-          }}
+          className="flex-1 overflow-y-auto px-4 py-3 space-y-1"
+          style={{ maxHeight: '150px', minHeight: '60px', scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,255,255,0.1) transparent' }}
         >
           {history.map((line, i) => (
-            <div key={i} className={line.startsWith('>') ? 'text-green-400' : ''}>
+            <div key={i} className={line.startsWith('$') ? 'text-canvas/90' : 'text-canvas/40'}>
               {line}
             </div>
           ))}
           <motion.div
             animate={{ opacity: [0, 1, 0] }}
-            transition={{ repeat: Infinity, duration: 1.1 }}
-            className="text-cyber-lime"
-          >
-            _
-          </motion.div>
+            transition={{ repeat: Infinity, duration: 1.2 }}
+            className="text-canvas/60 inline-block w-1.5 h-3 bg-canvas/60"
+          />
         </div>
 
-        {/* Input form - fixed at bottom */}
-        <form onSubmit={handleCommand} className="flex gap-2 border-t border-white/5 pt-2 shrink-0">
-          <span className="text-green-400">$</span>
+        {/* Input */}
+        <form
+          onSubmit={handleCommand}
+          className="flex gap-2 px-4 py-2.5 border-t border-canvas/10 shrink-0"
+        >
+          <span className="text-canvas/40">$</span>
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Type 'help'..."
-            className="flex-1 bg-transparent border-none outline-none text-white focus:ring-0 placeholder:text-gray-700 min-w-0"
+            placeholder="type 'help'…"
+            className="flex-1 bg-transparent border-none outline-none text-canvas/90 focus:ring-0 placeholder:text-canvas/20 min-w-0 text-xs font-mono"
             autoComplete="off"
           />
         </form>
@@ -127,37 +111,40 @@ export default function TerminalTile() {
 }
 
 export function StatusTile() {
-  const [time, setTime] = useState(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+  const [time, setTime] = useState(
+    new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  );
 
   useEffect(() => {
-    const timer = setInterval(() => setTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })), 1000);
+    const timer = setInterval(() =>
+      setTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })), 1000);
     return () => clearInterval(timer);
   }, []);
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
+      initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25, delay: 0.05 }}
-      className="bg-charcoal-light rounded-3xl border border-white/5 p-6 flex flex-col justify-between h-full group"
+      transition={{ duration: 0.2, delay: 0.05 }}
+      className="card p-6 flex flex-col justify-between h-full"
       style={{ maxHeight: '280px', minHeight: '200px' }}
     >
-      <div className="text-cyber-lime text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
-        <Clock size={12} />
+      <div className="mono-label flex items-center gap-2">
+        <Clock size={11} />
         Local Status
       </div>
-      
+
       <div>
-        <div className="text-5xl font-serif italic text-white tracking-tighter">{time}</div>
-        <div className="text-xs text-gray-500 font-mono mt-1 flex items-center gap-2">
-          <Cloud size={12} />
-          <span>Global Node • 18°C</span>
+        <div className="text-5xl font-black text-ink tracking-tighter display-number leading-none">{time}</div>
+        <div className="mono-label flex items-center gap-1.5 mt-2">
+          <Wifi size={11} />
+          Global Node · 18°C
         </div>
       </div>
 
       <div className="flex items-center gap-2">
-        <div className="w-2 h-2 rounded-full bg-cyber-lime animate-pulse" />
-        <span className="text-[10px] uppercase font-bold opacity-50 font-mono">Currently Coding</span>
+        <span className="status-dot" />
+        <span className="mono-label text-blue">Currently Coding</span>
       </div>
     </motion.div>
   );
