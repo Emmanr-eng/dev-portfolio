@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 
 const COMPONENTS = [
@@ -81,7 +81,10 @@ const COMPONENTS = [
           <div className="absolute inset-0 bg-cyber-lime border-2 border-black flex items-center justify-center font-bold backface-hidden">
             FRONT
           </div>
-          <div className="absolute inset-0 bg-black text-cyber-lime border-2 border-cyber-lime flex items-center justify-center font-bold" style={{ transform: 'rotateY(180deg)', backfaceVisibility: 'hidden' }}>
+          <div
+            className="absolute inset-0 bg-black text-cyber-lime border-2 border-cyber-lime flex items-center justify-center font-bold"
+            style={{ transform: 'rotateY(180deg)', backfaceVisibility: 'hidden' }}
+          >
             BACK
           </div>
         </motion.div>
@@ -121,28 +124,68 @@ const COMPONENTS = [
 ];
 
 export default function ComponentLab() {
-  const [activeId, setActiveId]           = useState(COMPONENTS[0].id);
+  const [activeId, setActiveId]             = useState(COMPONENTS[0].id);
   const [activeCategory, setActiveCategory] = useState<string>('all');
-  const [copied, setCopied]               = useState(false);
+  const [copied, setCopied]                 = useState(false);
 
-  const categories       = ['all', ...new Set(COMPONENTS.map(c => c.category))];
-  const filteredComponents = activeCategory === 'all'
-    ? COMPONENTS
-    : COMPONENTS.filter(c => c.category === activeCategory);
-  const activeComp = COMPONENTS.find(c => c.id === activeId) ?? COMPONENTS[0];
+  // FIX #16: store the timer ID so it can be cancelled on unmount
+  const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    // Clear any pending "reset copied" timer when the component unmounts
+    return () => {
+      if (copyTimerRef.current !== null) clearTimeout(copyTimerRef.current);
+    };
+  }, []);
+
+  // FIX #15: memoize derived values so they only recompute when their inputs change
+  const categories = useMemo(
+    () => ['all', ...new Set(COMPONENTS.map(c => c.category))],
+    [],
+  );
+
+  const filteredComponents = useMemo(
+    () =>
+      activeCategory === 'all'
+        ? COMPONENTS
+        : COMPONENTS.filter(c => c.category === activeCategory),
+    [activeCategory],
+  );
+
+  // FIX #17: when the active category changes, reset activeId to the first
+  // component in the new filtered list so the selection is always valid.
+  const resolvedActiveId = useMemo(() => {
+    const ids = filteredComponents.map(c => c.id);
+    return ids.includes(activeId) ? activeId : (ids[0] ?? COMPONENTS[0].id);
+  }, [filteredComponents, activeId]);
+
+  const activeComp = useMemo(
+    () => COMPONENTS.find(c => c.id === resolvedActiveId) ?? COMPONENTS[0],
+    [resolvedActiveId],
+  );
+
+  const handleCategoryChange = (cat: string) => {
+    setActiveCategory(cat);
+    // FIX #17: eagerly reset activeId to the first item in the new category
+    const first =
+      cat === 'all'
+        ? COMPONENTS[0].id
+        : (COMPONENTS.find(c => c.category === cat)?.id ?? COMPONENTS[0].id);
+    setActiveId(first);
+  };
 
   const copyCode = () => {
     navigator.clipboard.writeText(activeComp.code);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    // FIX #16: cancel any previous timer before scheduling a new one
+    if (copyTimerRef.current !== null) clearTimeout(copyTimerRef.current);
+    copyTimerRef.current = setTimeout(() => {
+      setCopied(false);
+      copyTimerRef.current = null;
+    }, 2000);
   };
 
   return (
-    /*
-     * BLUEPRINT RESTYLE
-     * Before: dark cyberpunk scanlines card, neon-pink border + glow
-     * After:  white card, blueprint blue border, dot-grid texture
-     */
     <div
       className="bp-grid bg-bp-surface text-bp-ink rounded-3xl h-full p-8 flex flex-col gap-6"
       style={{
@@ -154,44 +197,31 @@ export default function ComponentLab() {
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          {/* CHANGED: neon-pink flicker → blueprint deep navy */}
-          <h2
-            className="text-3xl font-black tracking-tighter uppercase"
-            style={{ color: '#1B4F9A' }}
-          >
+          <h2 className="text-3xl font-black tracking-tighter uppercase" style={{ color: '#1B4F9A' }}>
             Component Lab
           </h2>
-          {/* CHANGED: neon-cyan/60 → muted slate */}
           <p className="text-sm font-mono mt-1" style={{ color: '#4A6080' }}>
             {activeComp.description}
           </p>
         </div>
 
-        {/* CHANGED: neon-pink badge → blueprint blue badge */}
         <div
           className="flex rounded-lg p-1 text-[10px] font-bold shrink-0"
           style={{ background: 'rgba(27,79,154,0.07)', border: '1px solid rgba(27,79,154,0.18)' }}
         >
-          <span
-            className="px-3 py-1 rounded font-black text-white"
-            style={{ background: '#1B4F9A' }}
-          >
+          <span className="px-3 py-1 rounded font-black text-white" style={{ background: '#1B4F9A' }}>
             LIVE UI
           </span>
           <span className="px-3 py-1" style={{ color: 'rgba(27,79,154,0.45)' }}>v2.6</span>
         </div>
       </div>
 
-      {/* Category tabs */}
+      {/* Category tabs — FIX #17: use handleCategoryChange */}
       <div className="flex gap-2 flex-wrap">
         {categories.map(cat => (
           <button
             key={cat}
-            onClick={() => setActiveCategory(cat)}
-            /*
-             * CHANGED: neon-pink active / neon-cyan inactive
-             *       → blueprint blue active / muted inactive
-             */
+            onClick={() => handleCategoryChange(cat)}
             className="px-3 py-1 text-xs font-bold uppercase rounded-full border-2 transition-all font-mono"
             style={
               activeCategory === cat
@@ -205,30 +235,17 @@ export default function ComponentLab() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 flex-1">
-
         {/* Component list */}
         <div className="lg:col-span-4 space-y-2 overflow-y-auto max-h-75 lg:max-h-none pr-2">
           {filteredComponents.map(comp => (
             <button
               key={comp.id}
               onClick={() => setActiveId(comp.id)}
-              /*
-               * CHANGED: neon-pink active → blueprint blue active
-               *          dark hover → light blue hover
-               */
               className="w-full text-left p-4 rounded-xl border-2 transition-all"
               style={
-                activeId === comp.id
-                  ? {
-                      background: 'rgba(27,79,154,0.07)',
-                      color: '#1B4F9A',
-                      borderColor: '#1B4F9A',
-                    }
-                  : {
-                      background: '#F4F7FB',
-                      color: '#4A6080',
-                      borderColor: 'rgba(27,79,154,0.12)',
-                    }
+                resolvedActiveId === comp.id
+                  ? { background: 'rgba(27,79,154,0.07)', color: '#1B4F9A', borderColor: '#1B4F9A' }
+                  : { background: '#F4F7FB', color: '#4A6080', borderColor: 'rgba(27,79,154,0.12)' }
               }
             >
               <div className="font-black text-sm">{comp.title}</div>
@@ -238,17 +255,10 @@ export default function ComponentLab() {
         </div>
 
         {/* Preview panel */}
-        {/*
-          * CHANGED: dark/neon-cyan dashed border → white panel, blueprint dashed border
-          */}
         <div
           className="lg:col-span-8 rounded-2xl relative overflow-hidden flex flex-col min-h-75"
-          style={{
-            background: '#F4F7FB',
-            border: '2px dashed rgba(27,79,154,0.22)',
-          }}
+          style={{ background: '#F4F7FB', border: '2px dashed rgba(27,79,154,0.22)' }}
         >
-          {/* Copy button — CHANGED: neon-cyan → blueprint accent blue */}
           <button
             onClick={copyCode}
             className="absolute top-4 right-4 z-10 px-3 py-1 text-xs font-bold rounded font-mono transition-colors text-white"
@@ -257,18 +267,13 @@ export default function ComponentLab() {
             {copied ? '✓ Copied!' : 'Copy'}
           </button>
 
-          {/* Component preview */}
           <div className="flex-1 flex items-center justify-center p-6">
             {activeComp.ui}
           </div>
 
-          {/* Code view — CHANGED: neon-cyan/70 text → blueprint ink on white */}
           <div
             className="border-t-2 border-dashed p-4 overflow-x-auto"
-            style={{
-              borderColor: 'rgba(27,79,154,0.18)',
-              background: '#FFFFFF',
-            }}
+            style={{ borderColor: 'rgba(27,79,154,0.18)', background: '#FFFFFF' }}
           >
             <pre
               className="text-[11px] font-mono whitespace-pre-wrap"
