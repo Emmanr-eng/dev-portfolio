@@ -60,6 +60,12 @@ export default function ChatAgent({ triggerOnly = false }: { triggerOnly?: boole
     const userMsg = (messageText || input).trim();
     if (!userMsg || isTyping) return;
 
+    // Check if API key is available
+    if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'MY_GEMINI_API_KEY') {
+      setError("Chat is temporarily unavailable. Please configure your Gemini API key.");
+      return;
+    }
+
     setMessages(prev => [...prev, { role: 'user', text: userMsg }]);
     setInput('');
     setIsTyping(true);
