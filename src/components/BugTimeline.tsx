@@ -128,7 +128,7 @@ export default function BugTimeline() {
       <div className="max-w-xl">
         <h2 className="text-4xl md:text-5xl font-serif italic text-white mb-4">Timeline of a Bug</h2>
         <p className="text-gray-400 font-mono text-sm">
-          Engineering is 10% coding and 90% detective work. This is the log of the crimes I&Aposve solved.
+          Engineering is 10% coding and 90% detective work. This is the log of the crimes I&apos;ve solved.
         </p>
       </div>
 

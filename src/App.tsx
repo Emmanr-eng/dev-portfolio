@@ -72,7 +72,7 @@ export default function App() {
               href="mailto:emmanuel@hurdman.net"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="bg-cyber-lime text-black px-5 py-2 font-mono text-xs font-bold. border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none -translate-x-0.5 -translate-y-0.5 hover:translate-x-0 hover:translate-y-0 transition-all font-bold"
+              className="bg-cyber-lime text-black px-5 py-2 font-mono text-xs font-bold border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none -translate-x-0.5 -translate-y-0.5 hover:translate-x-0 hover:translate-y-0 transition-all"
             >
               PING ME
             </motion.a>
@@ -203,7 +203,7 @@ export default function App() {
             className="md:col-span-1 md:row-span-1 bg-cyber-lime rounded-[2.5rem] p-8 border-4 border-black flex flex-col justify-between group cursor-pointer hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] transition-all relative overflow-hidden"
           >
             <div className="absolute top-0 right-0 p-2 opacity-10">
-               <Globe size={40} className="animate-spin-slow" />
+               <Globe size={40} className="animate-spin" />
             </div>
             <div className="flex justify-end">
                <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center text-cyber-lime group-hover:rotate-360 transition-transform duration-700 shadow-xl">

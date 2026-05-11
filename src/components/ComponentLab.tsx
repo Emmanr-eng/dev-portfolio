@@ -125,7 +125,7 @@ const COMPONENTS = [
 
 export default function ComponentLab() {
   const [activeId, setActiveId] = useState(COMPONENTS[0].id);
-  const [view,] = useState<'ui' | 'code'>('ui');
+
   const [activeCategory, setActiveCategory] = useState<string>('all'); // NEW
   const [copied, setCopied] = useState(false); // NEW
 
@@ -147,10 +147,17 @@ export default function ComponentLab() {
   };
 
   return (
-    <div className="bg-cyber-lime text-black rounded-4xl border-4 border-black h-full p-8 flex flex-col gap-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+    <div className="bg-cyber-lime text-black rounded-3xl border-4 border-black h-full p-8 flex flex-col gap-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
       {/* Header section */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        {/* ... existing header ... */}
+        <div>
+          <h2 className="text-3xl font-black tracking-tighter uppercase">Component Lab</h2>
+          <p className="text-sm font-mono opacity-60 mt-1">{activeComp.description}</p>
+        </div>
+        <div className="flex bg-black/10 rounded-lg p-1 text-[10px] font-bold shrink-0">
+          <span className="bg-black text-white px-3 py-1 rounded">LIVE UI</span>
+          <span className="px-3 py-1 opacity-50">v2.6</span>
+        </div>
       </div>
 
       {/* NEW: Category tabs */}
@@ -189,16 +196,23 @@ export default function ComponentLab() {
 
         {/* Preview panel with copy button */}
         <div className="lg:col-span-8 bg-white/40 rounded-2xl border-2 border-dashed border-black/20 relative overflow-hidden flex flex-col min-h-75">
-          {/* NEW: Copy button for code view */}
-          {view === 'code' && (
-            <button
-              onClick={copyCode}
-              className="absolute top-4 right-4 z-10 bg-black text-cyber-lime px-3 py-1 text-xs font-bold rounded hover:bg-black/80"
-            >
-              {copied ? '✓ Copied!' : 'Copy'}
-            </button>
-          )}
-          {/* ... existing preview content ... */}
+          {/* Copy button */}
+          <button
+            onClick={copyCode}
+            className="absolute top-4 right-4 z-10 bg-black text-cyber-lime px-3 py-1 text-xs font-bold rounded hover:bg-black/80 transition-colors"
+          >
+            {copied ? '✓ Copied!' : 'Copy'}
+          </button>
+
+          {/* Component preview */}
+          <div className="flex-1 flex items-center justify-center p-6">
+            {activeComp.ui}
+          </div>
+
+          {/* Code view */}
+          <div className="border-t-2 border-dashed border-black/20 bg-black/5 p-4 overflow-x-auto">
+            <pre className="text-[11px] font-mono text-black/70 whitespace-pre-wrap">{activeComp.code}</pre>
+          </div>
         </div>
       </div>
     </div>
