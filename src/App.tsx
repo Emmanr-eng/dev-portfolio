@@ -25,7 +25,7 @@ export default function App() {
 
       {/* Scroll progress — single thin black line */}
       <motion.div
-        className="fixed top-0 left-0 right-0 h-[1px] bg-ink z-[100] origin-left"
+        className="fixed top-0 left-0 right-0 h-1px bg-ink z-100 origin-left"
         style={{ scaleX }}
       />
 
@@ -228,8 +228,8 @@ export default function App() {
 
         {/* ── Tech Marquee ── */}
         <div className="py-16 overflow-hidden relative rule-x border-b border-rule">
-          <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-canvas to-transparent z-10" />
-          <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-canvas to-transparent z-10" />
+          <div className="absolute inset-y-0 left-0 w-24 bg-linear-to-r from-canvas to-transparent z-10" />
+          <div className="absolute inset-y-0 right-0 w-24 bg-linear-to-l from-canvas to-transparent z-10" />
           <div className="flex whitespace-nowrap animate-marquee">
             {[...TECH_STACK, ...TECH_STACK].map((tech, i) => (
               <span key={i} className="text-5xl md:text-6xl font-black text-ink/[0.06] mx-10 flex items-center gap-6 uppercase tracking-tighter hover:text-ink/10 transition-colors cursor-default">
@@ -253,7 +253,7 @@ export default function App() {
         <section id="contact-us" className="pt-28 pb-16 scroll-mt-20">
           <div className="card p-14 md:p-20 relative overflow-hidden">
             {/* Ruled line decoration */}
-            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue to-transparent opacity-30" />
+            <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-blue to-transparent opacity-30" />
 
             <motion.div
               whileInView={{ opacity: [0, 1], y: [12, 0] }}
