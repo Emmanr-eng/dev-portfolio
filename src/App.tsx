@@ -163,36 +163,70 @@ export default function App() {
             <TerminalTile />
           </motion.div>
 
-                    {/* Timeline Tile (2x1) — CYBERPUNK RESTYLE */}
+                              {/* Timeline Tile (2x1) — BLUEPRINT LIGHT RESTYLE */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            // CHANGED: bg-charcoal-card border-white/5 → dark card with neon-pink glow border
-            className="md:col-span-2 md:row-span-1 rounded-[2.5rem] p-8 border relative group overflow-hidden"
+            /*
+             * CHANGED: dark '#1A1A26' bg, neon-pink border + glow
+             *       → white card, blueprint dot-grid, blueprint blue border
+             */
+            className="md:col-span-2 md:row-span-1 rounded-[2.5rem] p-8 relative group overflow-hidden bp-grid"
             style={{
-              background: '#1A1A26',
-              borderColor: 'rgba(255,45,120,0.35)',
-              boxShadow: '0 0 24px rgba(255,45,120,0.18)',
+              background: '#FFFFFF',
+              border: '1.5px solid rgba(27,79,154,0.18)',
+              boxShadow: '0 4px 24px rgba(27,79,154,0.09)',
             }}
           >
-            {/* CHANGED: text-cyber-lime → text-neon-pink with glow */}
-            <h3 className="text-[10px] font-black text-neon-pink uppercase tracking-widest mb-6 neon-flicker"
-                style={{ textShadow: '0 0 8px rgba(255,45,120,0.7)' }}>
+            {/* CHANGED: neon-pink flicker label → blueprint annotation label */}
+            <h3
+              className="text-[10px] font-black uppercase tracking-widest mb-6 font-mono bp-label"
+            >
               Log 082: Timeline of a Bug
             </h3>
+
             <div className="grid grid-cols-2 gap-4">
-              {/* CHANGED: bg-red-500/10 border-red-500/20 → neon-pink */}
-              <div className="bg-neon-pink/10 border border-neon-pink/30 rounded-2xl p-4 flex flex-col justify-center"
-                   style={{ boxShadow: '0 0 10px rgba(255,45,120,0.15)' }}>
-                <span className="text-[10px] font-black text-neon-pink uppercase mb-1">Broken</span>
-                <code className="text-[11px] text-neon-pink/50 font-mono">state.map(x =&gt; x)</code>
+              {/*
+                * CHANGED: neon-pink glow tile → crisp red-on-ivory tile
+                */}
+              <div
+                className="rounded-2xl p-4 flex flex-col justify-center"
+                style={{
+                  background: '#FEF2F2',
+                  border: '1.5px dashed #FECACA',
+                }}
+              >
+                <span
+                  className="text-[10px] font-black uppercase mb-1 font-mono"
+                  style={{ color: '#B91C1C' }}
+                >
+                  Broken
+                </span>
+                <code className="text-[11px] font-mono" style={{ color: '#991B1B' }}>
+                  state.map(x =&gt; x)
+                </code>
               </div>
-              {/* CHANGED: bg-cyber-lime/10 border-cyber-lime/20 → neon-cyan */}
-              <div className="bg-neon-cyan/10 border border-neon-cyan/30 rounded-2xl p-4 flex flex-col justify-center"
-                   style={{ boxShadow: '0 0 10px rgba(0,245,255,0.15)' }}>
-                <span className="text-[10px] font-black text-neon-cyan uppercase mb-1">Optimized</span>
-                <code className="text-[11px] text-neon-cyan font-mono">useMemo(() =&gt; st, [v])</code>
+
+              {/*
+                * CHANGED: neon-cyan glow tile → crisp green-on-mint tile
+                */}
+              <div
+                className="rounded-2xl p-4 flex flex-col justify-center"
+                style={{
+                  background: '#F0FDF4',
+                  border: '1.5px dashed #BBF7D0',
+                }}
+              >
+                <span
+                  className="text-[10px] font-black uppercase mb-1 font-mono"
+                  style={{ color: '#15803D' }}
+                >
+                  Optimized
+                </span>
+                <code className="text-[11px] font-mono" style={{ color: '#15803D' }}>
+                  useMemo(() =&gt; st, [v])
+                </code>
               </div>
             </div>
           </motion.div>

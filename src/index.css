@@ -5,15 +5,25 @@
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Playfair Display", serif;
   --font-mono: "JetBrains Mono", monospace;
-  
-  --color-cyber-lime: #DFFF00;
-  --color-neon-pink:  #FF2D78;
-  --color-neon-cyan:  #00F5FF;
-  --color-neon-purple:#BF00FF;
-  --color-charcoal-dark:   #0A0A0F;
-  --color-charcoal-light:  #12121A;
-  --color-charcoal-card:   #1A1A26;
-  --color-charcoal-border: rgba(255, 255, 255, 0.05);
+
+  /* ── Blueprint palette ────────────────────────────── */
+  --color-cyber-lime:       #DFFF00;          /* kept so existing refs don't break */
+  --color-bp-blue:          #1B4F9A;
+  --color-bp-accent:        #2563EB;
+  --color-bp-ink:           #0F1C3F;
+  --color-bp-muted:         #4A6080;
+  --color-bp-surface:       #FFFFFF;
+  --color-bp-surface2:      #F4F7FB;
+  --color-bp-bg:            #EEF3F9;
+  --color-bp-border:        rgba(27, 79, 154, 0.15);
+  --color-bp-error:         #B91C1C;
+  --color-bp-fixed:         #15803D;
+
+  /* ── Legacy dark tokens (kept for components not being restyled) ── */
+  --color-charcoal-dark:    #121212;
+  --color-charcoal-light:   #1E1E1E;
+  --color-charcoal-card:    #262626;
+  --color-charcoal-border:  rgba(255, 255, 255, 0.05);
 }
 
 html { scroll-behavior: smooth; }
@@ -28,58 +38,77 @@ body {
   font-family: var(--font-sans);
 }
 
-/* ── Cyberpunk glow helpers ───────────────────────── */
-.glow-pink  { box-shadow: 0 0 12px 2px rgba(255, 45, 120, 0.55); }
-.glow-cyan  { box-shadow: 0 0 12px 2px rgba(0, 245, 255, 0.55);  }
-.glow-lime  { box-shadow: 0 0 12px 2px rgba(223, 255, 0, 0.55);  }
-.text-glow-pink { text-shadow: 0 0 10px rgba(255, 45, 120, 0.8); }
-.text-glow-cyan { text-shadow: 0 0 10px rgba(0, 245, 255, 0.8);  }
-.text-glow-lime { text-shadow: 0 0 10px rgba(223, 255, 0, 0.8);  }
-
-/* ── Scanline overlay (apply as pseudo on a wrapper) ─ */
-.scanlines {
-  position: relative;
-}
-.scanlines::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    to bottom,
-    transparent,
-    transparent 2px,
-    rgba(0,0,0,0.18) 2px,
-    rgba(0,0,0,0.18) 4px
-  );
-  pointer-events: none;
-  border-radius: inherit;
-  z-index: 1;
+/* ── Blueprint dot-grid background (apply to sections) ─ */
+.bp-grid {
+  background-image: radial-gradient(circle, rgba(27,79,154,0.18) 1px, transparent 1px);
+  background-size: 22px 22px;
 }
 
-/* ── Neon border card ─────────────────────────────── */
-.cyber-card {
-  @apply rounded-2xl border transition-all duration-300;
-  background: var(--color-charcoal-card);
-  border-color: rgba(255, 45, 120, 0.35);
-  box-shadow: 0 0 18px rgba(255, 45, 120, 0.15), inset 0 0 30px rgba(0,0,0,0.4);
+/* ── Blueprint card ─────────────────────────────────── */
+.bp-card {
+  background: var(--color-bp-surface);
+  border: 1.5px solid var(--color-bp-border);
+  border-radius: 1rem;
+  box-shadow: 0 2px 12px rgba(27, 79, 154, 0.08), 0 1px 3px rgba(27, 79, 154, 0.06);
+  transition: box-shadow 0.2s, border-color 0.2s;
 }
-.cyber-card:hover {
-  border-color: rgba(255, 45, 120, 0.75);
-  box-shadow: 0 0 28px rgba(255, 45, 120, 0.35), inset 0 0 30px rgba(0,0,0,0.4);
-}
-
-.cyber-card-cyan {
-  @apply rounded-2xl border transition-all duration-300;
-  background: var(--color-charcoal-card);
-  border-color: rgba(0, 245, 255, 0.35);
-  box-shadow: 0 0 18px rgba(0, 245, 255, 0.15), inset 0 0 30px rgba(0,0,0,0.4);
-}
-.cyber-card-cyan:hover {
-  border-color: rgba(0, 245, 255, 0.75);
-  box-shadow: 0 0 28px rgba(0, 245, 255, 0.35), inset 0 0 30px rgba(0,0,0,0.4);
+.bp-card:hover {
+  border-color: rgba(27, 79, 154, 0.4);
+  box-shadow: 0 6px 28px rgba(27, 79, 154, 0.14), 0 1px 4px rgba(27, 79, 154, 0.08);
 }
 
-/* ── Bento / legacy cards ─────────────────────────── */
+/* ── Blueprint annotation label ─────────────────────── */
+.bp-label {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-bp-blue);
+  border-bottom: 1px dashed rgba(27, 79, 154, 0.3);
+  padding-bottom: 2px;
+}
+
+/* ── Blueprint dashed divider ────────────────────────── */
+.bp-divider {
+  border: none;
+  border-top: 1.5px dashed rgba(27, 79, 154, 0.2);
+}
+
+/* ── Blueprint badge ─────────────────────────────────── */
+.bp-badge {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid;
+}
+
+/* ── Selection ───────────────────────────────────────── */
+::selection {
+  background-color: var(--color-bp-accent);
+  color: white;
+}
+
+/* ── Marquee ─────────────────────────────────────────── */
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee       { animation: marquee 20s linear infinite; }
+.animate-marquee:hover { animation-play-state: paused; }
+
+/* ── Glass panel (legacy — keep for nav + other tiles) ─ */
+.glass-panel {
+  background: rgba(30, 30, 30, 0.4);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ── Bento / legacy cards ────────────────────────────── */
 .bento-card {
   @apply rounded-3xl p-6 border transition-all duration-300;
   border-color: var(--color-charcoal-border);
@@ -93,39 +122,29 @@ body {
   box-shadow: 4px 4px 0px black;
 }
 
-/* ── Selection ────────────────────────────────────── */
-::selection {
-  background-color: var(--color-neon-pink);
-  color: white;
+/* ── Scrollbar ───────────────────────────────────────── */
+::-webkit-scrollbar-track { background: var(--color-bp-bg); }
+::-webkit-scrollbar-thumb {
+  background: rgba(27, 79, 154, 0.25);
+  border-radius: 10px;
 }
+::-webkit-scrollbar-thumb:hover { background: var(--color-bp-blue); }
 
-/* ── Marquee ──────────────────────────────────────── */
-@keyframes marquee {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+/* ── Blueprint crosshair marker (timeline dot) ───────── */
+.bp-crosshair {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--color-bp-blue);
+  border: 2px solid var(--color-bp-bg);
+  box-shadow: 0 0 0 2px var(--color-bp-blue);
 }
-.animate-marquee { animation: marquee 20s linear infinite; }
-.animate-marquee:hover { animation-play-state: paused; }
-
-/* ── Glass ────────────────────────────────────────── */
-.glass-panel {
-  background: rgba(18, 18, 26, 0.6);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 45, 120, 0.12);
+.bp-crosshair::before,
+.bp-crosshair::after {
+  content: '';
+  position: absolute;
+  background: rgba(27, 79, 154, 0.35);
 }
-
-/* ── Scrollbar ────────────────────────────────────── */
-::-webkit-scrollbar-track  { background: var(--color-charcoal-dark); }
-::-webkit-scrollbar-thumb  { background: rgba(255,45,120,0.3); border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: var(--color-neon-pink); }
-
-/* ── Neon corner accent (decorative) ─────────────── */
-@keyframes flicker {
-  0%,100% { opacity: 1; }
-  92%     { opacity: 1; }
-  93%     { opacity: 0.4; }
-  94%     { opacity: 1; }
-  96%     { opacity: 0.6; }
-  97%     { opacity: 1; }
-}
-.neon-flicker { animation: flicker 6s infinite; }
+.bp-crosshair::before { width: 1px; height: 20px; left: 50%; top: -4px; transform: translateX(-50%); }
+.bp-crosshair::after  { height: 1px; width: 20px; top: 50%; left: -4px; transform: translateY(-50%); }
