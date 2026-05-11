@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Developer Atlas</title>
+    <!--
+      GitHub Pages 404 redirect handler (spa-github-pages pattern).
+      When GitHub Pages can't find a path it serves this 404.html.
+      We encode the full URL into a query param and redirect to the root,
+      where index.html's script decodes it back and restores the URL via
+      history.replaceState before React mounts.
+    -->
+    <script>
+      var pathSegmentsToKeep = 1; // number of path segments to keep (1 = /dev-portfolio/)
+      var l = window.location;
+      l.replace(
+        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+        l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?p=/' +
+        l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+        (l.search ? '&q=' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+        l.hash
+      );
+    </script>
+  </head>
+  <body>
+    <noscript>This portfolio requires JavaScript to run.</noscript>
+  </body>
+</html>
