@@ -1,13 +1,11 @@
 import { useState } from 'react';
 import { motion } from 'motion/react';
 
-
 const COMPONENTS = [
-  // Existing components...
   {
     id: 'glass-nav',
     title: 'Glass Nav',
-    category: 'navigation', // NEW: Add category
+    category: 'navigation',
     description: 'A frosted-glass navigation bar with dynamic backdrop filters.',
     ui: (
       <div className="w-full h-32 flex items-center justify-center backdrop-blur-md bg-white/10 rounded-2xl border border-white/20">
@@ -47,7 +45,6 @@ const COMPONENTS = [
   GLOW
 </motion.button>`
   },
-  // NEW COMPONENTS:
   {
     id: 'skeleton-loader',
     title: 'Skeleton Loader',
@@ -125,21 +122,15 @@ const COMPONENTS = [
 
 export default function ComponentLab() {
   const [activeId, setActiveId] = useState(COMPONENTS[0].id);
+  const [activeCategory, setActiveCategory] = useState<string>('all');
+  const [copied, setCopied] = useState(false);
 
-  const [activeCategory, setActiveCategory] = useState<string>('all'); // NEW
-  const [copied, setCopied] = useState(false); // NEW
-
-  // NEW: Get unique categories
   const categories = ['all', ...new Set(COMPONENTS.map(c => c.category))];
-
-  // NEW: Filter components by category
-  const filteredComponents = activeCategory === 'all' 
-    ? COMPONENTS 
+  const filteredComponents = activeCategory === 'all'
+    ? COMPONENTS
     : COMPONENTS.filter(c => c.category === activeCategory);
-
   const activeComp = COMPONENTS.find(c => c.id === activeId) ?? COMPONENTS[0];
 
-  // NEW: Copy to clipboard function
   const copyCode = () => {
     navigator.clipboard.writeText(activeComp.code);
     setCopied(true);
@@ -147,29 +138,39 @@ export default function ComponentLab() {
   };
 
   return (
-    <div className="bg-cyber-lime text-black rounded-3xl border-4 border-black h-full p-8 flex flex-col gap-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
-      {/* Header section */}
+    // ── CHANGED: was bg-cyber-lime text-black border-black shadow-neo-brutalist
+    //            now dark cyberpunk card with neon-pink glow border
+    <div className="scanlines bg-charcoal-card text-white rounded-3xl border border-neon-pink/40 h-full p-8 flex flex-col gap-6 glow-pink"
+         style={{ boxShadow: '0 0 32px rgba(255,45,120,0.25), inset 0 0 60px rgba(0,0,0,0.5)' }}>
+
+      {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h2 className="text-3xl font-black tracking-tighter uppercase">Component Lab</h2>
-          <p className="text-sm font-mono opacity-60 mt-1">{activeComp.description}</p>
+          {/* CHANGED: text-black → text-neon-pink with glow */}
+          <h2 className="text-3xl font-black tracking-tighter uppercase text-neon-pink text-glow-pink neon-flicker">
+            Component Lab
+          </h2>
+          {/* CHANGED: opacity-60 black text → cyan muted */}
+          <p className="text-sm font-mono text-neon-cyan/60 mt-1">{activeComp.description}</p>
         </div>
-        <div className="flex bg-black/10 rounded-lg p-1 text-[10px] font-bold shrink-0">
-          <span className="bg-black text-white px-3 py-1 rounded">LIVE UI</span>
-          <span className="px-3 py-1 opacity-50">v2.6</span>
+        {/* CHANGED: bg-black/10 → neon-pink/10 pill badge */}
+        <div className="flex bg-neon-pink/10 border border-neon-pink/30 rounded-lg p-1 text-[10px] font-bold shrink-0">
+          <span className="bg-neon-pink text-black px-3 py-1 rounded font-black">LIVE UI</span>
+          <span className="px-3 py-1 text-neon-pink/50">v2.6</span>
         </div>
       </div>
 
-      {/* NEW: Category tabs */}
+      {/* Category tabs */}
       <div className="flex gap-2 flex-wrap">
         {categories.map(cat => (
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
+            // CHANGED: black/white active → neon-pink/cyan active tabs
             className={`px-3 py-1 text-xs font-bold uppercase rounded-full border-2 transition-all ${
-              activeCategory === cat 
-                ? 'bg-black text-white border-black' 
-                : 'bg-transparent text-black/60 border-black/20 hover:border-black'
+              activeCategory === cat
+                ? 'bg-neon-pink text-black border-neon-pink shadow-[0_0_10px_rgba(255,45,120,0.6)]'
+                : 'bg-transparent text-neon-cyan/60 border-neon-cyan/20 hover:border-neon-cyan/60 hover:text-neon-cyan'
             }`}
           >
             {cat}
@@ -178,14 +179,17 @@ export default function ComponentLab() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 flex-1">
-        {/* Component list - use filteredComponents instead of COMPONENTS */}
+        {/* Component list */}
         <div className="lg:col-span-4 space-y-2 overflow-y-auto max-h-75 lg:max-h-none pr-2">
           {filteredComponents.map(comp => (
             <button
               key={comp.id}
               onClick={() => setActiveId(comp.id)}
+              // CHANGED: white/black active → neon-pink active, dark hover
               className={`w-full text-left p-4 rounded-xl border-2 transition-all ${
-                activeId === comp.id ? 'bg-black text-white border-black' : 'bg-white/30 border-transparent hover:border-black/20'
+                activeId === comp.id
+                  ? 'bg-neon-pink/15 text-neon-pink border-neon-pink shadow-[0_0_12px_rgba(255,45,120,0.4)]'
+                  : 'bg-charcoal-dark/50 text-gray-400 border-white/5 hover:border-neon-pink/30 hover:text-white'
               }`}
             >
               <div className="font-black text-sm">{comp.title}</div>
@@ -194,12 +198,13 @@ export default function ComponentLab() {
           ))}
         </div>
 
-        {/* Preview panel with copy button */}
-        <div className="lg:col-span-8 bg-white/40 rounded-2xl border-2 border-dashed border-black/20 relative overflow-hidden flex flex-col min-h-75">
-          {/* Copy button */}
+        {/* Preview panel */}
+        {/* CHANGED: bg-white/40 border-dashed black → dark panel with cyan dashed border */}
+        <div className="lg:col-span-8 bg-charcoal-dark/60 rounded-2xl border-2 border-dashed border-neon-cyan/25 relative overflow-hidden flex flex-col min-h-75">
+          {/* Copy button — CHANGED: black bg → neon-cyan */}
           <button
             onClick={copyCode}
-            className="absolute top-4 right-4 z-10 bg-black text-cyber-lime px-3 py-1 text-xs font-bold rounded hover:bg-black/80 transition-colors"
+            className="absolute top-4 right-4 z-10 bg-neon-cyan text-black px-3 py-1 text-xs font-bold rounded hover:bg-neon-cyan/80 transition-colors shadow-[0_0_8px_rgba(0,245,255,0.5)]"
           >
             {copied ? '✓ Copied!' : 'Copy'}
           </button>
@@ -209,9 +214,10 @@ export default function ComponentLab() {
             {activeComp.ui}
           </div>
 
-          {/* Code view */}
-          <div className="border-t-2 border-dashed border-black/20 bg-black/5 p-4 overflow-x-auto">
-            <pre className="text-[11px] font-mono text-black/70 whitespace-pre-wrap">{activeComp.code}</pre>
+          {/* Code view — CHANGED: border-dashed black/5 → neon-cyan/20 */}
+          <div className="border-t-2 border-dashed border-neon-cyan/20 bg-black/30 p-4 overflow-x-auto">
+            {/* CHANGED: text-black/70 → text-neon-cyan/70 */}
+            <pre className="text-[11px] font-mono text-neon-cyan/70 whitespace-pre-wrap">{activeComp.code}</pre>
           </div>
         </div>
       </div>

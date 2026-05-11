@@ -97,10 +97,8 @@ export default function BugTimeline() {
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
-  // Get all unique tags
   const allTags = [...new Set(BUGS.flatMap(bug => bug.tags))];
 
-  // Filter bugs based on search and tag
   const filteredBugs = BUGS.filter(bug => {
     const matchesSearch = bug.title.toLowerCase().includes(search.toLowerCase()) ||
                           bug.challenge.toLowerCase().includes(search.toLowerCase());
@@ -108,12 +106,12 @@ export default function BugTimeline() {
     return matchesSearch && matchesTag;
   });
 
-  // Severity badge component
   const SeverityBadge = ({ severity }: { severity: string }) => {
+    // CHANGED: softer tints → vivid neon cyberpunk badges
     const colors = {
-      critical: 'bg-red-500/20 text-red-400 border-red-500/30',
-      medium: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
-      low: 'bg-green-500/20 text-green-400 border-green-500/30'
+      critical: 'bg-neon-pink/20 text-neon-pink border-neon-pink/50 shadow-[0_0_8px_rgba(255,45,120,0.4)]',
+      medium:   'bg-yellow-400/20 text-yellow-300 border-yellow-400/50 shadow-[0_0_8px_rgba(250,204,21,0.35)]',
+      low:      'bg-neon-cyan/20 text-neon-cyan border-neon-cyan/50 shadow-[0_0_8px_rgba(0,245,255,0.35)]',
     };
     return (
       <span className={`px-2 py-0.5 text-[10px] font-bold uppercase rounded border ${colors[severity as keyof typeof colors]}`}>
@@ -126,8 +124,12 @@ export default function BugTimeline() {
     <div className="space-y-8">
       {/* Header */}
       <div className="max-w-xl">
-        <h2 className="text-4xl md:text-5xl font-serif italic text-white mb-4">Timeline of a Bug</h2>
-        <p className="text-gray-400 font-mono text-sm">
+        {/* CHANGED: text-white → text-neon-cyan with glow */}
+        <h2 className="text-4xl md:text-5xl font-serif italic text-neon-cyan text-glow-cyan mb-4">
+          Timeline of a Bug
+        </h2>
+        {/* CHANGED: text-gray-400 → text-neon-cyan/50 */}
+        <p className="text-neon-cyan/50 font-mono text-sm">
           Engineering is 10% coding and 90% detective work. This is the log of the crimes I&apos;ve solved.
         </p>
       </div>
@@ -135,21 +137,27 @@ export default function BugTimeline() {
       {/* Search & Filters */}
       <div className="flex flex-col md:flex-row gap-4">
         <div className="relative flex-1 max-w-md">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
+          {/* CHANGED: text-gray-500 → text-neon-cyan/50 */}
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-neon-cyan/50" />
+          {/* CHANGED: bg-charcoal-light border-white/10 focus:border-cyber-lime
+                     → bg-charcoal-dark border-neon-cyan/20 focus:border-neon-cyan glow */}
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search bugs..."
-            className="w-full bg-charcoal-light border border-white/10 rounded-lg pl-10 pr-4 py-2 text-white text-sm focus:outline-none focus:border-cyber-lime"
+            className="w-full bg-charcoal-dark border border-neon-cyan/20 rounded-lg pl-10 pr-4 py-2 text-white text-sm focus:outline-none focus:border-neon-cyan focus:shadow-[0_0_10px_rgba(0,245,255,0.3)] transition-all"
           />
         </div>
-        
+
         <div className="flex gap-2 flex-wrap">
           <button
             onClick={() => setActiveTag(null)}
+            // CHANGED: bg-cyber-lime text-black → bg-neon-pink text-black with glow
             className={`px-3 py-1.5 text-xs font-bold rounded-full border transition-all ${
-              !activeTag ? 'bg-cyber-lime text-black border-cyber-lime' : 'bg-transparent text-gray-400 border-white/10 hover:border-white/30'
+              !activeTag
+                ? 'bg-neon-pink text-black border-neon-pink shadow-[0_0_10px_rgba(255,45,120,0.55)]'
+                : 'bg-transparent text-gray-400 border-white/10 hover:border-neon-pink/40 hover:text-neon-pink'
             }`}
           >
             All
@@ -159,7 +167,9 @@ export default function BugTimeline() {
               key={tag}
               onClick={() => setActiveTag(tag === activeTag ? null : tag)}
               className={`px-3 py-1.5 text-xs font-bold rounded-full border transition-all ${
-                activeTag === tag ? 'bg-cyber-lime text-black border-cyber-lime' : 'bg-transparent text-gray-400 border-white/10 hover:border-white/30'
+                activeTag === tag
+                  ? 'bg-neon-pink text-black border-neon-pink shadow-[0_0_10px_rgba(255,45,120,0.55)]'
+                  : 'bg-transparent text-gray-400 border-white/10 hover:border-neon-pink/40 hover:text-neon-pink'
               }`}
             >
               {tag}
@@ -170,10 +180,12 @@ export default function BugTimeline() {
 
       {/* Bug List */}
       <div className="grid gap-6 relative">
-        <div className="absolute left-8 top-0 bottom-0 w-px bg-charcoal-border hidden md:block" />
+        {/* CHANGED: bg-charcoal-border → neon-pink/30 timeline line */}
+        <div className="absolute left-8 top-0 bottom-0 w-px hidden md:block"
+             style={{ background: 'linear-gradient(to bottom, rgba(255,45,120,0.6), rgba(0,245,255,0.3))' }} />
 
         {filteredBugs.map((bug, index) => (
-          <motion.div 
+          <motion.div
             key={bug.id}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -181,37 +193,43 @@ export default function BugTimeline() {
             transition={{ delay: index * 0.1 }}
             className="relative pl-0 md:pl-20 group"
           >
-            <div className="absolute left-6.5 top-8 w-3 h-3 rounded-full bg-cyber-lime border-2 border-black hidden md:block" />
-            
-            <div 
-              className="bg-charcoal-light border border-white/5 rounded-2xl overflow-hidden hover:border-cyber-lime/30 transition-colors cursor-pointer"
+            {/* CHANGED: bg-cyber-lime → neon-pink dot on timeline */}
+            <div className="absolute left-6 top-8 w-3.5 h-3.5 rounded-full hidden md:block"
+                 style={{ background: '#FF2D78', boxShadow: '0 0 10px 3px rgba(255,45,120,0.7)', border: '2px solid #0A0A0F' }} />
+
+            {/* CHANGED: bg-charcoal-light border-white/5 hover:border-cyber-lime/30
+                       → cyber-card with neon-pink glow on hover */}
+            <div
+              className="bg-charcoal-card border border-neon-pink/20 rounded-2xl overflow-hidden hover:border-neon-pink/60 hover:shadow-[0_0_20px_rgba(255,45,120,0.25)] transition-all cursor-pointer"
               onClick={() => setExpandedId(expandedId === bug.id ? null : bug.id)}
             >
-              {/* Header - always visible */}
+              {/* Header */}
               <div className="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="flex items-start gap-4">
-                  <div className="p-2 bg-red-500/10 text-red-500 rounded border border-red-500/20">
+                  {/* CHANGED: bg-red-500/10 text-red-500 border-red-500/20 → neon-pink */}
+                  <div className="p-2 bg-neon-pink/10 text-neon-pink rounded border border-neon-pink/30 shadow-[0_0_8px_rgba(255,45,120,0.3)]">
                     <Bug size={18} />
                   </div>
                   <div>
                     <div className="flex items-center gap-3 mb-1">
-                      <h3 className="text-xl font-serif text-white">{bug.title}</h3>
+                      {/* CHANGED: font-serif text-white → font-serif text-white (keep) but add glow on hover via group */}
+                      <h3 className="text-xl font-serif text-white group-hover:text-neon-cyan transition-colors">{bug.title}</h3>
                       <SeverityBadge severity={bug.severity} />
                     </div>
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-gray-500 text-xs font-mono">{bug.date}</span>
+                      {/* CHANGED: text-gray-500 → text-neon-cyan/40 */}
+                      <span className="text-neon-cyan/40 text-xs font-mono">{bug.date}</span>
                       {bug.tags.map(tag => (
-                        <span key={tag} className="text-[10px] px-2 py-0.5 bg-white/5 text-gray-400 rounded">
+                        // CHANGED: bg-white/5 text-gray-400 → bg-neon-pink/5 text-neon-pink/60
+                        <span key={tag} className="text-[10px] px-2 py-0.5 bg-neon-pink/8 text-neon-pink/60 border border-neon-pink/15 rounded">
                           {tag}
                         </span>
                       ))}
                     </div>
                   </div>
                 </div>
-                <motion.div
-                  animate={{ rotate: expandedId === bug.id ? 180 : 0 }}
-                  className="text-gray-500"
-                >
+                {/* CHANGED: text-gray-500 → text-neon-pink/60 */}
+                <motion.div animate={{ rotate: expandedId === bug.id ? 180 : 0 }} className="text-neon-pink/60">
                   <ChevronDown size={20} />
                 </motion.div>
               </div>
@@ -226,30 +244,37 @@ export default function BugTimeline() {
                     className="overflow-hidden"
                   >
                     <div className="px-6 pb-6 space-y-4">
-                      <p className="text-gray-400 text-sm">{bug.challenge}</p>
-                      
+                      {/* CHANGED: text-gray-400 → text-gray-300 */}
+                      <p className="text-gray-300 text-sm">{bug.challenge}</p>
+
                       <div className="grid md:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <div className="flex items-center gap-2 text-[10px] font-mono text-red-400 uppercase">
+                          {/* CHANGED: text-red-400 → text-neon-pink */}
+                          <div className="flex items-center gap-2 text-[10px] font-mono text-neon-pink uppercase">
                             <Code size={12} /> The Problem
                           </div>
-                          <pre className="bg-charcoal-dark p-4 rounded border border-red-900/20 font-mono text-[11px] text-red-300 whitespace-pre-wrap overflow-x-auto">
+                          {/* CHANGED: bg-charcoal-dark border-red-900/20 text-red-300
+                                     → dark bg, neon-pink border, neon-pink text */}
+                          <pre className="bg-black/60 p-4 rounded border border-neon-pink/30 font-mono text-[11px] text-neon-pink/80 whitespace-pre-wrap overflow-x-auto shadow-[inset_0_0_20px_rgba(255,45,120,0.08)]">
                             {bug.before}
                           </pre>
                         </div>
                         <div className="space-y-2">
-                          <div className="flex items-center gap-2 text-[10px] font-mono text-cyber-lime uppercase">
+                          {/* CHANGED: text-cyber-lime → text-neon-cyan */}
+                          <div className="flex items-center gap-2 text-[10px] font-mono text-neon-cyan uppercase">
                             <Code size={12} /> The Solution
                           </div>
-                          <pre className="bg-charcoal-dark p-4 rounded border border-cyber-lime/20 font-mono text-[11px] text-cyber-lime whitespace-pre-wrap overflow-x-auto">
+                          {/* CHANGED: border-cyber-lime/20 text-cyber-lime → neon-cyan */}
+                          <pre className="bg-black/60 p-4 rounded border border-neon-cyan/30 font-mono text-[11px] text-neon-cyan/80 whitespace-pre-wrap overflow-x-auto shadow-[inset_0_0_20px_rgba(0,245,255,0.08)]">
                             {bug.after}
                           </pre>
                         </div>
                       </div>
 
                       {bug.learnings && (
-                        <div className="bg-cyber-lime/5 border border-cyber-lime/20 rounded-lg p-4">
-                          <span className="text-[10px] font-bold text-cyber-lime uppercase">Key Learning</span>
+                        // CHANGED: bg-cyber-lime/5 border-cyber-lime/20 → neon-cyan glow panel
+                        <div className="bg-neon-cyan/5 border border-neon-cyan/25 rounded-lg p-4 shadow-[0_0_12px_rgba(0,245,255,0.1)]">
+                          <span className="text-[10px] font-bold text-neon-cyan uppercase">Key Learning</span>
                           <p className="text-gray-300 text-sm mt-1">{bug.learnings}</p>
                         </div>
                       )}

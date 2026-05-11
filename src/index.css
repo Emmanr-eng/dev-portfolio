@@ -7,15 +7,16 @@
   --font-mono: "JetBrains Mono", monospace;
   
   --color-cyber-lime: #DFFF00;
-  --color-charcoal-dark: #121212;
-  --color-charcoal-light: #1E1E1E;
-  --color-charcoal-card: #262626;
+  --color-neon-pink:  #FF2D78;
+  --color-neon-cyan:  #00F5FF;
+  --color-neon-purple:#BF00FF;
+  --color-charcoal-dark:   #0A0A0F;
+  --color-charcoal-light:  #12121A;
+  --color-charcoal-card:   #1A1A26;
   --color-charcoal-border: rgba(255, 255, 255, 0.05);
 }
 
-html {
-  scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
 :root {
   background-color: var(--color-charcoal-dark);
@@ -27,56 +28,104 @@ body {
   font-family: var(--font-sans);
 }
 
+/* ── Cyberpunk glow helpers ───────────────────────── */
+.glow-pink  { box-shadow: 0 0 12px 2px rgba(255, 45, 120, 0.55); }
+.glow-cyan  { box-shadow: 0 0 12px 2px rgba(0, 245, 255, 0.55);  }
+.glow-lime  { box-shadow: 0 0 12px 2px rgba(223, 255, 0, 0.55);  }
+.text-glow-pink { text-shadow: 0 0 10px rgba(255, 45, 120, 0.8); }
+.text-glow-cyan { text-shadow: 0 0 10px rgba(0, 245, 255, 0.8);  }
+.text-glow-lime { text-shadow: 0 0 10px rgba(223, 255, 0, 0.8);  }
+
+/* ── Scanline overlay (apply as pseudo on a wrapper) ─ */
+.scanlines {
+  position: relative;
+}
+.scanlines::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.18) 2px,
+    rgba(0,0,0,0.18) 4px
+  );
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 1;
+}
+
+/* ── Neon border card ─────────────────────────────── */
+.cyber-card {
+  @apply rounded-2xl border transition-all duration-300;
+  background: var(--color-charcoal-card);
+  border-color: rgba(255, 45, 120, 0.35);
+  box-shadow: 0 0 18px rgba(255, 45, 120, 0.15), inset 0 0 30px rgba(0,0,0,0.4);
+}
+.cyber-card:hover {
+  border-color: rgba(255, 45, 120, 0.75);
+  box-shadow: 0 0 28px rgba(255, 45, 120, 0.35), inset 0 0 30px rgba(0,0,0,0.4);
+}
+
+.cyber-card-cyan {
+  @apply rounded-2xl border transition-all duration-300;
+  background: var(--color-charcoal-card);
+  border-color: rgba(0, 245, 255, 0.35);
+  box-shadow: 0 0 18px rgba(0, 245, 255, 0.15), inset 0 0 30px rgba(0,0,0,0.4);
+}
+.cyber-card-cyan:hover {
+  border-color: rgba(0, 245, 255, 0.75);
+  box-shadow: 0 0 28px rgba(0, 245, 255, 0.35), inset 0 0 30px rgba(0,0,0,0.4);
+}
+
+/* ── Bento / legacy cards ─────────────────────────── */
 .bento-card {
   @apply rounded-3xl p-6 border transition-all duration-300;
   border-color: var(--color-charcoal-border);
 }
-
 .bento-card-vibrant {
   @apply rounded-3xl p-6 border-4 border-black text-black transition-transform duration-300 hover:scale-[1.02];
   background-color: var(--color-cyber-lime);
 }
-
 .neo-brutalist-border {
   border: 4px solid black;
   box-shadow: 4px 4px 0px black;
 }
 
-/* Custom selection color */
+/* ── Selection ────────────────────────────────────── */
 ::selection {
-  background-color: var(--color-cyber-lime);
-  color: black;
+  background-color: var(--color-neon-pink);
+  color: white;
 }
 
+/* ── Marquee ──────────────────────────────────────── */
 @keyframes marquee {
-  0% { transform: translateX(0); }
+  0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
+.animate-marquee { animation: marquee 20s linear infinite; }
+.animate-marquee:hover { animation-play-state: paused; }
 
-.animate-marquee {
-  animation: marquee 20s linear infinite;
-}
-
-.animate-marquee:hover {
-  animation-play-state: paused;
-}
-
-/* Glass effect refinement */
+/* ── Glass ────────────────────────────────────────── */
 .glass-panel {
-  background: rgba(30, 30, 30, 0.4);
+  background: rgba(18, 18, 26, 0.6);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 45, 120, 0.12);
 }
 
-::-webkit-scrollbar-track {
-  background: var(--color-charcoal-dark);
-}
+/* ── Scrollbar ────────────────────────────────────── */
+::-webkit-scrollbar-track  { background: var(--color-charcoal-dark); }
+::-webkit-scrollbar-thumb  { background: rgba(255,45,120,0.3); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-neon-pink); }
 
-::-webkit-scrollbar-thumb {
-  background: var(--color-charcoal-border);
-  border-radius: 10px;
+/* ── Neon corner accent (decorative) ─────────────── */
+@keyframes flicker {
+  0%,100% { opacity: 1; }
+  92%     { opacity: 1; }
+  93%     { opacity: 0.4; }
+  94%     { opacity: 1; }
+  96%     { opacity: 0.6; }
+  97%     { opacity: 1; }
 }
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-cyber-lime);
-}
+.neon-flicker { animation: flicker 6s infinite; }

@@ -163,22 +163,36 @@ export default function App() {
             <TerminalTile />
           </motion.div>
 
-          {/* Timeline Tile (2x1) */}
-          <motion.div 
+                    {/* Timeline Tile (2x1) — CYBERPUNK RESTYLE */}
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="md:col-span-2 md:row-span-1 bg-charcoal-card rounded-[2.5rem] p-8 border border-white/5 relative group overflow-hidden"
+            // CHANGED: bg-charcoal-card border-white/5 → dark card with neon-pink glow border
+            className="md:col-span-2 md:row-span-1 rounded-[2.5rem] p-8 border relative group overflow-hidden"
+            style={{
+              background: '#1A1A26',
+              borderColor: 'rgba(255,45,120,0.35)',
+              boxShadow: '0 0 24px rgba(255,45,120,0.18)',
+            }}
           >
-            <h3 className="text-[10px] font-black text-cyber-lime uppercase tracking-widest mb-6">Log 082: Timeline of a Bug</h3>
+            {/* CHANGED: text-cyber-lime → text-neon-pink with glow */}
+            <h3 className="text-[10px] font-black text-neon-pink uppercase tracking-widest mb-6 neon-flicker"
+                style={{ textShadow: '0 0 8px rgba(255,45,120,0.7)' }}>
+              Log 082: Timeline of a Bug
+            </h3>
             <div className="grid grid-cols-2 gap-4">
-              <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-4 flex flex-col justify-center">
-                <span className="text-[10px] font-black text-red-500 uppercase mb-1">Broken</span>
-                <code className="text-[11px] text-gray-500 font-mono">state.map(x =&gt; x)</code>
+              {/* CHANGED: bg-red-500/10 border-red-500/20 → neon-pink */}
+              <div className="bg-neon-pink/10 border border-neon-pink/30 rounded-2xl p-4 flex flex-col justify-center"
+                   style={{ boxShadow: '0 0 10px rgba(255,45,120,0.15)' }}>
+                <span className="text-[10px] font-black text-neon-pink uppercase mb-1">Broken</span>
+                <code className="text-[11px] text-neon-pink/50 font-mono">state.map(x =&gt; x)</code>
               </div>
-              <div className="bg-cyber-lime/10 border border-cyber-lime/20 rounded-2xl p-4 flex flex-col justify-center">
-                <span className="text-[10px] font-black text-cyber-lime uppercase mb-1">Optimized</span>
-                <code className="text-[11px] text-white font-mono">useMemo(() =&gt; st, [v])</code>
+              {/* CHANGED: bg-cyber-lime/10 border-cyber-lime/20 → neon-cyan */}
+              <div className="bg-neon-cyan/10 border border-neon-cyan/30 rounded-2xl p-4 flex flex-col justify-center"
+                   style={{ boxShadow: '0 0 10px rgba(0,245,255,0.15)' }}>
+                <span className="text-[10px] font-black text-neon-cyan uppercase mb-1">Optimized</span>
+                <code className="text-[11px] text-neon-cyan font-mono">useMemo(() =&gt; st, [v])</code>
               </div>
             </div>
           </motion.div>
